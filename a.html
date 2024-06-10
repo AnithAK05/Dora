@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+        form {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #driver-info {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .driver-link {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .driver-link:hover {
+            color: #0056b3;
+        }
+        .driver-info-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .driver-info-container:hover {
+            background-color: #e9e9e9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Find a Driver</h1>
+    <form action="#" method="post" id="find-driver-form">
+        <input type="text" name="location" id="location" placeholder="Enter your location">
+        <br>
+        <input type="submit" value="Find Drivers">
+    </form>
+    <div id="driver-info"></div>
+</div>
+
+<script>
+    document.getElementById('find-driver-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        var location = document.getElementById('location').value;
+
+        // Example: Driver information based on location
+        var driverInfo = {
+            "chandanagar": [
+                { name: "John Doe", link: "http://127.0.0.1:5500/b.html" },
+                { name: "Jane Smith", link: "http://127.0.0.1:5500/c.html" },
+                // Add more drivers for New York as needed
+            ],
+            "miyapur": [
+                { name: "Michael Johnson", link: "http://127.0.0.1:5500/d.html" },
+                { name: "Emily Brown", link: "http://127.0.0.1:5500/e.html" },
+                // Add more drivers for Los Angeles as needed
+            ],
+            // Add more locations with their respective driver information
+        };
+
+        var html = "<h2>Driver Information for " + location + "</h2>";
+        var drivers = driverInfo[location];
+        if (drivers) {
+            drivers.forEach(function(driver) {
+                html += "<div class='driver-info-container'>";
+                html += "<p><a class='driver-link' href='" + driver.link + "'>" + driver.name + "</a></p>";
+                html += "</div>";
+            });
+        } else {
+            html += "<p>No drivers found for this location.</p>";
+        }
+
+        document.getElementById('driver-info').innerHTML = html;
+    });
+</script>
+
+</body>
+</html>
