@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track My Walk</title>
+    <style>
+        #canvas {
+            border: 1px solid black;
+            display: block;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let pathCoordinates = [];
+        let currentLocation = null;
+
+        // Set the canvas size to the window size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Convert latitude and longitude to canvas coordinates
+        function latLngToCanvas(lat, lng) {
+            const x = (lng + 180) * (canvas.width / 360);
+            const y = (90 - lat) * (canvas.height / 180);
+            return { x, y };
+        }
+
+        // Draw the path and the current location
+        function drawPath() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the red path
+            if (pathCoordinates.length > 0) {
+                ctx.beginPath();
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+
+                for (let i = 0; i < pathCoordinates.length; i++) {
+                    const coord = pathCoordinates[i];
+                    if (i === 0) {
+                        ctx.moveTo(coord.x, coord.y);
+                    } else {
+                        ctx.lineTo(coord.x, coord.y);
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // Draw the blue dot for the current location
+            if (currentLocation) {
+                ctx.beginPath();
+                ctx.arc(currentLocation.x, currentLocation.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'blue';
+                ctx.fill();
+            }
+        }
+
+        // Update the position and redraw the path
+        function updatePosition(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            currentLocation = latLngToCanvas(lat, lng);
+            pathCoordinates.push(currentLocation);
+            drawPath();
+        }
+
+        // Handle geolocation errors
+        function handleError(error) {
+            console.error('Error occurred. Error code: ' + error.code);
+        }
+
+        // Watch the user's position
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(updatePosition, handleError, {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+
+        // Resize the canvas and redraw the path on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawPath();
+        });
+    </script>
+</body>
+</html>
